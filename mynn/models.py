@@ -114,8 +114,14 @@ class DynamicCNN(nn.Module):
             elif layer_type == 'adaptiveavgpool':
                 layers.append(nn.AdaptiveAvgPool2d(**params))
                 output_size = params['output_size']
-                current_h = output_size[0] if isinstance(output_size, tuple) else output_size
-                current_w = output_size[1] if isinstance(output_size, tuple) else output_size
+                if isinstance(output_size, (list, tuple)):  # 处理列表或元组
+                    current_h = output_size[0]
+                    current_w = output_size[1]
+                elif isinstance(output_size, int):  # 处理整数
+                    current_h = output_size
+                    current_w = output_size
+                else:
+                    raise ValueError(f"Unsupported output_size type for AdaptiveAvgPool2d: {type(output_size)}")
             elif layer_type == 'resblock':  # 新增：处理 ResBlock
                 if 'out_channels' not in params:
                     raise ValueError(f"ResBlock 层索引 {i} 缺少 'out_channels'。参数: {params}")
