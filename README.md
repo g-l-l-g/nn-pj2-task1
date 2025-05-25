@@ -62,49 +62,51 @@
 
 ## 环境配置
 
-1.  创建虚拟环境 (推荐):
+### 创建虚拟环境 (推荐):
+```
     bash
     python -m venv venv
     # 或者使用 conda
     # conda create -n mycnn_env python=3.10
-    
+```
 
-2.  激活虚拟环境:
+### 激活虚拟环境:
     *   Windows: venv\Scripts\activate
     *   macOS/Linux: source venv/bin/activate
     *   Conda: conda activate mycnn_env
 
-3.  安装依赖:
+### 安装依赖:
+```
     bash
     pip install -r requirements.txt
-    
-    确保您安装的 PyTorch 版本与您的 CUDA 版本兼容（如果使用 GPU）。您可以访问 PyTorch官网 (https://pytorch.org/get-started/locally/) 获取特定平台的安装命令。
+```
+    确保您安装的 PyTorch 版本与您的 CUDA 版本兼容（如果使用 GPU）。您可以访问 PyTorch官网 (`https://pytorch.org/get-started/locally/`) 获取特定平台的安装命令。
 
-4.  下载 CIFAR-10 数据集:
-    *   首次运行 mynn/data_loader.py 中的 get_cifar10_loaders 函数时，如果 download=True (默认未设置，建议手动下载或首次运行时修改)，会自动下载数据集到 mynn/config/project_setup_config.py 中 DATASET_ROOT_DIR 指定的路径下（默认为 ./dataset）。
-    *   或者，您可以手动下载 CIFAR-10 Python 版本数据集，并解压到 ./dataset/cifar-10-batches-py 目录下。
+### 下载 CIFAR-10 数据集:
+    *   首次运行` mynn/data_loader.py `中的 `get_cifar10_loaders` 函数时，如果` download=True` (默认未设置，建议手动下载或首次运行时修改)，会自动下载数据集到 `mynn/config/project_setup_config.py` 中` DATASET_ROOT_DIR` 指定的路径下（默认为` ./dataset`）。
+    *   或者，您可以手动下载` CIFAR-10 Python `版本数据集，并解压到 `./dataset/cifar-10-batches-py `目录下。
 
 ## 如何使用
 
 ### 配置实验
 
-实验配置位于 mynn/config/experiments/ 目录下。每个 .py 文件定义了一个或多个实验的架构和训练参数。
+实验配置位于 `mynn/config/experiments/ `目录下。每个 `.py` 文件定义了一个或多个实验的架构和训练参数。
 
 *   ARCHITECTURE: 一个列表，定义了网络的层及其参数。支持的层类型包括 conv, bn, relu, pool, avgpool, adaptiveavgpool, flatten, fc, dropout, resblock。
 *   EXPERIMENT_CONFIG: 一个字典，包含了模型类型、架构名称、优化器、学习率、损失函数、训练轮数、批大小等超参数。
 
-例如，deep_resnet_config.py 定义了一个类 ResNet-34 的架构。
+例如，`deep_resnet_config.py 定义了一个类 ResNet-34 的架构。
 
-要添加新的实验，可以在 mynn/config/experiments/ 目录下创建一个新的 Python 文件，定义 ARCHITECTURE 和 EXPERIMENT_CONFIG，然后在 mynn/config/experiments/__init__.py 中的 ALL_EXPERIMENT_CONFIGS 字典中注册它。
+要添加新的实验，可以在` mynn/config/experiments/ `目录下创建一个新的 Python 文件，定义 `ARCHITECTURE` 和 `EXPERIMENT_CONFIG`，然后在` mynn/config/experiments/__init__.py `中的 `ALL_EXPERIMENT_CONFIGS` 字典中注册它。
 
 ### 运行训练实验
 
-使用 main.py 脚本来运行训练实验。
-
+使用` main.py `脚本来运行训练实验。
+```
 bash
 python main.py
-
-默认情况下，main.py 中的 experiments_to_run列表指定了要运行的实验。您可以修改此列表来运行特定的实验或多个实验。
+```
+默认情况下，`main.py `中的 `experiments_to_run`列表指定了要运行的实验。您可以修改此列表来运行特定的实验或多个实验。
 
 ```
 Python
@@ -119,9 +121,9 @@ if __name__ == '__main__':
 
 ### 测试已训练的模型
 
-使用 test.py 脚本来评估已训练模型在测试集上的性能。
+使用` test.py `脚本来评估已训练模型在测试集上的性能。
 
-您需要修改 test.py底部的 if __name__ == '__main__': 部分，指定要测试的实验的时间戳、实验配置名称以及模型权重文件名。
+您需要修改` test.py`底部的 `if __name__ == '__main__':` 部分，指定要测试的实验的时间戳、实验配置名称以及模型权重文件名。
 ```
 Python
 # 在 test.py 中修改
@@ -139,60 +141,68 @@ if __name__ == '__main__':
     test_model_on_test_set(config_path_=CONFIG_FILE_PATH, model_weights_path_=TRAINED_MODEL_WEIGHTS_PATH)
 ```
 然后运行：
+```
 bash
 python test.py
-
+```
 ### 生成可视化结果
 
-项目在 ./visualizations/ 目录下提供了一些独立的 Python 脚本，用于对已训练的模型生成各种可视化图表。这些脚本通常需要指定实验配置文件的路径和模型权重文件的路径。
+项目在` ./visualizations/` 目录下提供了一些独立的 Python 脚本，用于对已训练的模型生成各种可视化图表。这些脚本通常需要指定实验配置文件的路径和模型权重文件的路径。
 
-在每个可视化脚本的 if __name__ == '__main__': 部分，您需要设置正确的 experiment_time, experiment_name, CONFIG_FILE_PATH 和 TRAINED_MODEL_WEIGHTS_PATH。
+在每个可视化脚本的` if __name__ == '__main__':` 部分，您需要设置正确的` experiment_time`, `experiment_name`, `CONFIG_FILE_PATH` 和 `TRAINED_MODEL_WEIGHTS_PATH`。
 
 #### 混淆矩阵:
+```
 bash
 python visualizations/confusion_matrix_visualization.py
-输出保存在 visualizations/confusion_matrix/<experiment_time>/<experiment_name>/。
+```
+输出保存在` visualizations/confusion_matrix/<experiment_time>/<experiment_name>/`。
 
 #### 滤波器可视化:
+```
 bash
 python visualizations/filter_visualization.py
-
-输出保存在 visualizations/filters/<experiment_time>/<experiment_name>/。默认可视化第一个卷积层。
+```
+输出保存在` visualizations/filters/<experiment_time>/<experiment_name>/`。默认可视化第一个卷积层。
 
 #### Grad-CAM 可视化:
+```
 bash
 python visualizations/grad-cam_vsualization.py
-
-默认处理3个样本。输出保存在 visualizations/grad_cam/<experiment_time>/<experiment_name>/。
+```
+默认处理3个样本。输出保存在 `visualizations/grad_cam/<experiment_time>/<experiment_name>/`。
 
 #### 3D 损失函数表面图:
+```
 bash
 python visualizations/loss_surface_visualization.py
+```
+默认基于最佳模型权重绘制。输出保存在 `visualizations/3d_loss_surface/<experiment_time>/<experiment_name>/`。该脚本可能计算量较大。
 
-默认基于最佳模型权重绘制。输出保存在 visualizations/3d_loss_surface/<experiment_time>/<experiment_name>/。该脚本可能计算量较大。
-
-脚本内 visualization_parameters 可以调整绘图的细节，例如采样点数和范围。
+脚本内` visualization_parameters` 可以调整绘图的细节，例如采样点数和范围。
 
 ### 使用 TensorBoard
 
 训练过程中会生成 TensorBoard 日志。要查看它们：
 确保已安装 TensorBoard (pip install tensorboard)。
 在命令行中运行：
+```
 bash
 tensorboard --logdir ./runs
-
+```
 或者指定到某个具体实验的 tensorboard_logs 目录：
+```
 bash
 tensorboard --logdir ./runs/<timestamp>/<experiment_name>/tensorboard_logs
-
-在浏览器中打开 TensorBoard 提供的链接 (通常是 http://localhost:6006)。
+```
+在浏览器中打开 TensorBoard 提供的链接 (通常是`http://localhost:6006`)。
 
 ## 主要模块说明
 
-mynn.config: 包含项目级别的设置（如数据集路径、类别名）、训练默认参数以及所有实验的具体配置。
-mynn.data_loader: 负责加载和预处理 CIFAR-10 数据集，支持数据增强和验证集分割。
-mynn.models: 定义了 DynamicCNN 类，它可以根据配置文件动态创建网络。还包括 ResBlock 的实现。
-mynn.train: 包含核心的训练循环逻辑 train_model，处理模型训练、验证、学习率调度、权重保存和 TensorBoard 日志记录。
-mynn.evaluate: 提供了 evaluate_model 函数，用于在测试集上评估模型性能并生成混淆矩阵。
-mynn.utils: 包含各种辅助工具，如绘图函数 (训练曲线、混淆矩阵、3D损失图)、滤波器可视化和 Grad-CAM 实现。
+`mynn.config`: 包含项目级别的设置（如数据集路径、类别名）、训练默认参数以及所有实验的具体配置。
+`mynn.data_loader`: 负责加载和预处理 CIFAR-10 数据集，支持数据增强和验证集分割。
+`mynn.models`: 定义了 DynamicCNN 类，它可以根据配置文件动态创建网络。还包括 ResBlock 的实现。
+`mynn.train`: 包含核心的训练循环逻辑 train_model，处理模型训练、验证、学习率调度、权重保存和 TensorBoard 日志记录。
+`mynn.evaluate`: 提供了 evaluate_model 函数，用于在测试集上评估模型性能并生成混淆矩阵。
+`mynn.utils`: 包含各种辅助工具，如绘图函数 (训练曲线、混淆矩阵、3D损失图)、滤波器可视化和 Grad-CAM 实现。
 
